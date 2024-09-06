@@ -20,6 +20,12 @@ router.all("*", function (req, res, next) {
   if (req.method.toLowerCase() === "delete" && req.path.endsWith("/aks/priyeshtest/authenticated/zombie/external/piiDeleteParams")) {
 	  return res.status(200).send({message:"success"});
   }
+
+  if(req.path.includes("bejoy-rescan")) return res.status(200).json({message: "success."});
+
+  if (req.path.includes("aks200")) {
+          return res.status(200).send({message:"AKS 200 success"});
+  }
   if (req.method.toLowerCase() === "patch" && req.path.endsWith("aks/priyeshtest/authenticated/zombie/external/piiRequestParams")) {
           return res.status(200).send({message:"success"});
   }
