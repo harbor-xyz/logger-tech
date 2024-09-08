@@ -45,40 +45,46 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Custom middleware for logging and metrics
 app.use((req, res, next) => {
-  const originalSend = res.send;
-  res.send = function (body) {
-    const requestId = uuidv4();
-    const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
-    const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
-    const logEntry = {
-      contextpath: req.baseUrl,
-      endpoint: `${req.path}${queryString}`,
-      fullendpoint: `${req.baseUrl}${req.path}${queryString}`,
-      hostname: req.hostname,
-      level: "info",
-      message: `contextpath: ${req.baseUrl} with request for ${req.path} with method ${req.method.toLowerCase()} is served with status code ${res.statusCode}`,
-      method: req.method.toLowerCase(),
-      path_params: "unnormalised",
-      status: res.statusCode.toString(),
-      timestamp: timestamp,
-      request_id: requestId,
-      job: "local-logs"
+    const originalSend = res.send;
+    res.send = function (body) {
+      const requestId = uuidv4();
+      const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
+      const fullUrl = req.originalUrl || req.url;
+      const queryString = fullUrl.includes('?') ? fullUrl.substring(fullUrl.indexOf('?')) : '';
+      
+      // Use CSV match info if available
+      const csvMatchInfo = res.locals.csvMatchInfo || {};
+      const contextPath = csvMatchInfo.contextPath || '';
+      const path = csvMatchInfo.path || fullUrl.replace(queryString, '').replace(contextPath, '');
+  
+      const logEntry = {
+        contextpath: contextPath,
+        endpoint: `${path}${queryString}`,
+        fullendpoint: fullUrl,
+        hostname: req.hostname,
+        level: "info",
+        message: `contextpath: ${contextPath} with request for ${path} with method ${req.method.toLowerCase()} is served with status code ${res.statusCode}`,
+        method: req.method.toLowerCase(),
+        path_params: "unnormalised",
+        status: res.statusCode.toString(),
+        timestamp: timestamp,
+        request_id: requestId,
+        job: "local-logs"
+      };
+  
+      winstonLogger.info(logEntry);
+  
+      // Increment Prometheus counter
+      httpRequestsTotal.labels(req.method, path, res.statusCode).inc();
+  
+      // New Relic custom attributes
+      newrelic.addCustomAttribute('request_id', requestId);
+      newrelic.addCustomAttribute('contextpath', contextPath);
+  
+      originalSend.call(this, body);
     };
-
-    winstonLogger.info(logEntry);
-
-    // Increment Prometheus counter
-    httpRequestsTotal.labels(req.method, req.path, res.statusCode).inc();
-
-    // New Relic custom attributes (if you want to add these to New Relic transactions)
-    newrelic.addCustomAttribute('request_id', requestId);
-    newrelic.addCustomAttribute('contextpath', req.baseUrl);
-
-    originalSend.call(this, body);
-  };
-  next();
-});
-
+    next();
+  });
 app.use('/metrics', async function (req, res, next) {
     console.log("metrics")
     res.set('Content-Type', register.contentType);
