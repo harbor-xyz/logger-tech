@@ -1,0 +1,45 @@
+# Main configuration
+target: all
+multitenancy_enabled: false
+
+# Block storage configuration
+blocks_storage:
+  backend: filesystem
+  filesystem:
+    dir: /tmp/mimir/blocks
+
+# Server configuration
+server:
+  http_listen_port: 9009
+
+# Distributor configuration
+distributor:
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: inmemory
+
+# Ingester configuration
+ingester:
+  ring:
+    replication_factor: 1
+    kvstore:
+      store: inmemory
+
+# Compactor configuration
+compactor:
+  data_dir: /tmp/mimir/compactor
+  sharding_ring:
+    kvstore:
+      store: inmemory
+
+# Ruler storage configuration
+ruler_storage:
+  backend: filesystem
+  filesystem:
+    dir: /tmp/mimir/rules
+
+# Limits configuration
+limits:
+  max_global_series_per_user: 0
+  max_global_series_per_metric: 0

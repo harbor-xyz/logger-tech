@@ -3,15 +3,28 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-      "start": "node ./bin/www",
+      "start": "NEW_RELIC_APP_NAME=ApplicationLogs NEW_RELIC_LICENSE_KEY=a0204d33d363c7e64916970ad4b8a3a3FFFFNRAL node -r newrelic ./bin/www",
       "build": "yarn install --production"
 
   },
   "dependencies": {
+    "@types/node": "^22.5.4",
+    "@types/uuid": "^10.0.0",
+    "@types/winston": "^2.4.4",
     "cookie-parser": "~1.4.4",
+    "csv-parser": "^3.0.0",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "morgan": "~1.9.1",
-    "nodemon": "^3.1.4"
+    "newrelic": "^12.3.1",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "uuid": "^10.0.0",
+    "winston": "^3.14.2"
+  },
+  "devDependencies": {
+    "@types/newrelic": "^9.14.4"
   }
 }
