@@ -8,4 +8,4 @@ scrape_configs:
 
   - job_name: 'logger.tech'
     static_configs:
-      - targets: ['localhost']
+      - targets: ['logger.tech.p0.inc']

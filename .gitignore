@@ -1,4 +1,7 @@
 node_modules/
 package-lock.json
 *.log
+*.log.pos
+*.log.meta
 *lock*
+.DS_Store

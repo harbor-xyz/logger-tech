@@ -77,3 +77,4 @@ volumes:
   elasticsearch_data:
   mimir_data:
   loki_data:
+    driver: local
