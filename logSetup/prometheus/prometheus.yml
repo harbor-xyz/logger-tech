@@ -1,11 +1,11 @@
 global:
-  scrape_interval: 15s
+  scrape_interval: 5s
 
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'fluentd'
+  - job_name: 'logger.tech'
     static_configs:
-      - targets: ['fluentd:24231']
+      - targets: ['localhost']

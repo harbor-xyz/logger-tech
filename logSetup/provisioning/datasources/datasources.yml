@@ -15,3 +15,8 @@ datasources:
       interval: Daily
       timeField: "@timestamp"
     isDefault: true
+
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
