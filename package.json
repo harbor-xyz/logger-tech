@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "NEW_RELIC_APP_NAME=ApplicationLogs NEW_RELIC_LICENSE_KEY=a0204d33d363c7e64916970ad4b8a3a3FFFFNRAL node -r ./newrelic ./bin/www",
+    "start": "NEW_RELIC_APP_NAME=ApplicationLogs NEW_RELIC_LICENSE_KEY=<licence-key> node -r /home/ubuntu/logger-tech/newrelic ./bin/www",
     "build": "yarn install --production"
   },
   "dependencies": {
