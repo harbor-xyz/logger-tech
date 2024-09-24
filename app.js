@@ -50,6 +50,9 @@ app.use((req, res, next) => {
       const requestId = uuidv4();
       const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
       const fullUrl = req.originalUrl || req.url;
+      if (fullUrl.includes('metrics')) {
+          return originalSend.call(this, body);
+      }
       const queryString = fullUrl.includes('?') ? fullUrl.substring(fullUrl.indexOf('?')) : '';
       
       // Use CSV match info if available
@@ -78,6 +81,7 @@ app.use((req, res, next) => {
       httpRequestsTotal.labels(req.method, path, res.statusCode).inc();
   
       // New Relic custom attributes
+      newrelic.addCustomAttribute('Name', 'WebTransaction/SpringController/GET/'+logEntry['endpoint']);
       newrelic.addCustomAttribute('request_id', requestId);
       newrelic.addCustomAttribute('contextpath', contextPath);
   

@@ -57,7 +57,7 @@ const generateLogEntry = (row: CsvRow): LogEntry => {
     status: row.statusCode,
     timestamp,
     request_id: uuidv4(),
-    job: 'local-logs'
+    job: 'stress-logs'
   };
 };
 
@@ -113,7 +113,7 @@ const generateLogsAtRate = (rows: CsvRow[], targetLogsPerMinute: number): void =
 const runLogGenerator = async (): Promise<void> => {
   try {
     const rows = await readCsvFile('logSetup/logs_base.csv');
-    const targetLogsPerMinute = 100000; // You can adjust this value
+    const targetLogsPerMinute = 50000; // You can adjust this value
     console.log(`Starting log generation with target of ${targetLogsPerMinute} logs per minute...`);
     generateLogsAtRate(rows, targetLogsPerMinute);
   } catch (error) {

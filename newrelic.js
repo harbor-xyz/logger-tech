@@ -48,5 +48,8 @@ exports.config = {
       'response.headers.setCookie*',
       'response.headers.x*'
     ]
+  },
+  rules: {
+    ignore: ['^/socket.io/.*/xhr-polling/', '/metrics']
   }
 }
